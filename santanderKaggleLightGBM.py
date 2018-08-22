@@ -7,8 +7,6 @@ import pandas as pd  # data processing, CSV file I/O (e.g. pd.read_csv)
 import lightgbm as lgb
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import KFold
-from scipy.stats import skew
-import time
 import gc
 
 gc.enable()
@@ -40,34 +38,34 @@ def get_data():
 def add_statistics(train, test):
     train_zeros = pd.DataFrame({'Percent_zero': ((train.values) == 0).mean(axis=0),
                                 'Column': train.columns})
-    
+
     high_vol_columns = train_zeros['Column'][train_zeros['Percent_zero'] < 0.70].values
     low_vol_columns = train_zeros['Column'][train_zeros['Percent_zero'] >= 0.70].values
-    #This is part of the trick I think, plus lightgbm has a special process for NaNs
-    train = train.replace({0:np.nan})
-    test = test.replace({0:np.nan})
+    # This is part of the trick I think, plus lightgbm has a special process for NaNs
+    train = train.replace({0: np.nan})
+    test = test.replace({0: np.nan})
 
-    cluster_sets = {"low":low_vol_columns, "high":high_vol_columns}
+    cluster_sets = {"low": low_vol_columns, "high": high_vol_columns}
     for cluster_key in cluster_sets:
-        for df in [train,test]:
-            df["count_not0_"+cluster_key] = df[cluster_sets[cluster_key]].count(axis=1)
-            df["sum_"+cluster_key] = df[cluster_sets[cluster_key]].sum(axis=1)
-            df["var_"+cluster_key] = df[cluster_sets[cluster_key]].var(axis=1)
-            df["median_"+cluster_key] = df[cluster_sets[cluster_key]].median(axis=1)
-            df["mean_"+cluster_key] = df[cluster_sets[cluster_key]].mean(axis=1)
-            df["std_"+cluster_key] = df[cluster_sets[cluster_key]].std(axis=1)
-            df["max_"+cluster_key] = df[cluster_sets[cluster_key]].max(axis=1)
-            df["min_"+cluster_key] = df[cluster_sets[cluster_key]].min(axis=1)
-            df["skew_"+cluster_key] = df[cluster_sets[cluster_key]].skew(axis=1)
-            df["kurtosis_"+cluster_key] = df[cluster_sets[cluster_key]].kurtosis(axis=1)
-    train_more_simplified = train.drop(high_vol_columns,axis=1).drop(low_vol_columns,axis=1)
+        for df in [train, test]:
+            df["count_not0_" + cluster_key] = df[cluster_sets[cluster_key]].count(axis=1)
+            df["sum_" + cluster_key] = df[cluster_sets[cluster_key]].sum(axis=1)
+            df["var_" + cluster_key] = df[cluster_sets[cluster_key]].var(axis=1)
+            df["median_" + cluster_key] = df[cluster_sets[cluster_key]].median(axis=1)
+            df["mean_" + cluster_key] = df[cluster_sets[cluster_key]].mean(axis=1)
+            df["std_" + cluster_key] = df[cluster_sets[cluster_key]].std(axis=1)
+            df["max_" + cluster_key] = df[cluster_sets[cluster_key]].max(axis=1)
+            df["min_" + cluster_key] = df[cluster_sets[cluster_key]].min(axis=1)
+            df["skew_" + cluster_key] = df[cluster_sets[cluster_key]].skew(axis=1)
+            df["kurtosis_" + cluster_key] = df[cluster_sets[cluster_key]].kurtosis(axis=1)
+    train_more_simplified = train.drop(high_vol_columns, axis=1).drop(low_vol_columns, axis=1)
     colnames = list(train_more_simplified)
     return train, test, colnames
 
 
-def fit_predict(data, y, test,colnames):
+def fit_predict(data, y, test, colnames):
     # Get the features we're going to train on
-    features = get_selected_features() + colnames #+ ['nb_nans', 'the_median', 'the_mean', 'the_sum', 'the_std', 'the_kur','the_max','the_min','the_var','count_not0']
+    features = get_selected_features() + colnames  # + ['nb_nans', 'the_median', 'the_mean', 'the_sum', 'the_std', 'the_kur','the_max','the_min','the_var','count_not0']
     # Create folds
     folds = KFold(n_splits=8, shuffle=True, random_state=1)
     # Convert to lightgbm Dataset
