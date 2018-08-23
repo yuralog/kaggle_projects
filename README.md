@@ -1,12 +1,18 @@
 # My kaggle projects
 
-## Santader (https://www.kaggle.com/c/santander-value-prediction-challenge)
+## Santader 
 #### TOP 200 kaggle
-####  I took (https://www.kaggle.com/nulldata/jiazhen-to-armamut-via-gurchetan1000-0-56) kerner and added LightGBM for missed values
+####  I took (https://www.kaggle.com/nulldata/jiazhen-to-armamut-via-gurchetan1000-0-56) kernel and added LightGBM for missed values
 
 
-## HomeCredit(https://www.kaggle.com/c/home-credit-default-risk)
+## HomeCredit
 
 
-##
+## Other solutions
+### Time series
+#### I added lags and used linear model. Graph
+
+### Default level
+#### I used linear, Tree, ExtraTree model. Graph
+
 
