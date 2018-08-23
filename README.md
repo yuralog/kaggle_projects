@@ -10,9 +10,9 @@
 
 ## Other solutions
 ### Time series
-#### I added lags and used linear model. Graph
+#### I added lags and used linear model. Graphs
 
 ### Default level
-#### I used linear, Tree, ExtraTree model. Graph
+#### I used linear, Tree, ExtraTree model. Graphs
 
 
